@@ -29,7 +29,8 @@ output = open(newfile, 'w')
 #mylist = [i.split('Record ')[-1] for i in mylist]
 amount = str(len(mylist))
 mystring = ','.join(mylist)
-mystring2 = 'sudo -u apache /opt/cds-invenio/bin/bibrank -u cleggm1 --disable-citation-losses-check -i ' + mystring
+mystring2 = 'sudo -u apache /opt/cds-invenio/bin/bibrank -u cleggm1 \
+--disable-citation-losses-check -i ' + mystring
 
 answer = raw_input("""Execute the following on %s records? y/n
 
@@ -38,7 +39,8 @@ answer = raw_input("""Execute the following on %s records? y/n
 """ % (amount, mystring2))
 
 if answer == 'y':
-    subprocess.call(['sudo', '-u', 'apache', '/opt/cds-invenio/bin/bibrank', '-u', 'cleggm1', '--disable-citation-losses-check', '-i', mystring])
+    subprocess.call(['sudo', '-u', 'apache', '/opt/cds-invenio/bin/bibrank', '-u', 'cleggm1', \
+    '--disable-citation-losses-check', '-i', mystring])
     output.write(mystring2)
     output.close()
 else:
