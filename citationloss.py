@@ -27,20 +27,19 @@ output = open(newfile, 'w')
 #del mylist[0]
 #mylist = [i.split(' lost')[0] for i in mylist]
 #mylist = [i.split('Record ')[-1] for i in mylist]
+amount = str(len(mylist))
 mystring = ','.join(mylist)
 mystring2 = 'sudo -u apache /opt/cds-invenio/bin/bibrank -u cleggm1 --disable-citation-losses-check -i ' + mystring
 
-answer = raw_input("""Execute the following? y/n
+answer = raw_input("""Execute the following on %s records? y/n
 
 %s
 
-""" % mystring2)
+""" % (amount, mystring2))
 
 if answer == 'y':
-    subprocess.call(['sudo', '-u', 'apache', '/opt/cds-invenio/bin/bibrank', '-u', 'cleggm1', '--disable-citation-losses-check', '-i',$
+    subprocess.call(['sudo', '-u', 'apache', '/opt/cds-invenio/bin/bibrank', '-u', 'cleggm1', '--disable-citation-losses-check', '-i', mystring])
     output.write(mystring2)
     output.close()
 else:
     print 'Bibrank not run'
-
-
