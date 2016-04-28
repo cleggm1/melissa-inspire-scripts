@@ -1,4 +1,5 @@
 import re
+import sys
 import datetime
 import subprocess
 from invenio.search_engine import perform_request_search
@@ -10,8 +11,9 @@ search = raw_input("Run bibrank on this search: ")
 x = perform_request_search(p=search, cc="HEP")
 if len(x) > 0:
     mylist = [str(r) for r in x]
-
-
+else:
+    sys.exit()
+    
 today = str(datetime.date.today())
 newfile = 'tmp_loss_from_search__' + today + '.txt'
 output = open(newfile, 'w')
@@ -71,4 +73,3 @@ else:
         output.close()
     else:
         print 'Bibrank not run'
-
