@@ -9,10 +9,10 @@ VERBOSE = False
 
 today = str(datetime.date.today())
 i = 0
-while os.path.exists('/afs/fnal.gov/files/home/room3/cleggm1/tmp_jobhidden_' + t
+while os.path.exists('/nashome/c/cleggm1/tmp_jobhidden_' + t
 oday + '_%s_correct.txt' % i):
     i += 1
-newfile = '/afs/fnal.gov/files/home/room3/cleggm1/tmp_jobhidden_' + today + '_%s
+newfile = '/nashome/c/cleggm1/tmp_jobhidden_' + today + '_%s
 _correct.txt' % i
 
 output = open(newfile, 'w')
