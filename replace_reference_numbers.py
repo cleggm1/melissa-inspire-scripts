@@ -1,7 +1,7 @@
 import re
 
 filename_in = 'tmp_refs.in'
-filename_out = '/afs/fnal.gov/files/home/room3/cleggm1/tmp_refs.out.txt'
+filename_out = '/nashome/c/cleggm1/tmp_refs.out.txt'
 mylist = []
 new_num = raw_input('new reference number:')
 new_num2 = '$$9CURATOR$$o'+new_num+'$$'
