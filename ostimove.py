@@ -23,6 +23,7 @@
 """
 
 import re
+from invenio.bibrecord import print_rec, record_add_field
 
 provenance = 'OSTI'
 
