@@ -23,7 +23,6 @@
 """
 
 import re
-from invenio.bibrecord import print_rec, record_add_field
 
 provenance = 'OSTI'
 
@@ -35,11 +34,13 @@ def check_record(record):
     for pos, val in record.iterfield('8564_u',
                                      subfield_filter=('y', provenance)):
         if val:
-            val = val.replace('%26', '&')
+#            val = val.replace('%26', '&')
             ostimatch = osti_id.match(val)
             if ostimatch:
-                osti_subfields = [('9', 'OSTI'), ('a', ostimatch)]
+                osti_subfields = [('9', 'OSTI'), ('a', ostimatch.groups())]
                 record_add_field(record, '035', ' ', ' ', subfields=osti_subfields)
                 record.delete_field((pos[0][0:3], pos[1], None))
                 record.set_amended(
-                    "moved link %s %s" % (record.record_id, val))
+                    "%s: moved link '%s'" % (record.record_id, val))
+            else:
+                print "%s: no match for '%s'" % (record.record_id, val)
