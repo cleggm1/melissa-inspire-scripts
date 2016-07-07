@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 from invenio.search_engine import perform_request_search, get_record, get_fieldvalues
 from invenio.bibrecord import print_rec, record_get_field_instances, \
 record_add_field
