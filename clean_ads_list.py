@@ -1,3 +1,7 @@
+"""
+Finds the difference between a file with finished ADS mismatches and ADS mismatches that still need to be looked at.
+"""
+
 import re
 
 input_to_do = open('ads_to_do.in', 'r').readlines()
