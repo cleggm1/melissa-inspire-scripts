@@ -1,3 +1,6 @@
+"""Searches INSPIRE-HEP for records with the 'old journal' pubnote,
+   changes them to the 'new journal' pubnote, and adds the journal letter to the volume if necessary.
+"""
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
