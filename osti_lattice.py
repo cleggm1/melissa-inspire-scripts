@@ -1,3 +1,7 @@
+"""
+Parses OSTI XML files and converts them to MARCXML for upload to INSPIRE
+"""
+
 from invenio.search_engine import perform_request_search
 from invenio.search_engine import get_fieldvalues
 from invenio.bibrecord import print_rec, record_add_field
