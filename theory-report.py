@@ -1,4 +1,7 @@
-
+"""
+Provides text CV output of Fermilab Theory Department papers from specified month,
+including report number and pages
+"""
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 import re
