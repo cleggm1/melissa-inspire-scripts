@@ -1,10 +1,16 @@
+"""
+Searches for a specified journal and creates an html file with links to all records and associated references
+that don't have an issue number in the pubnote
+"""
+
 import re
 from invenio.search_engine import perform_request_search
 from invenio.search_engine import get_fieldvalues
 
 issues = []
+short_name = "Electron.J.Theor.Phys."
 output = open('needs_issues_added.html', 'w')
-search = "fin j Electron.J.Theor.Phys."
+search = "fin j %s" % short_name
 x = perform_request_search(p=search, cc="HEP")
 for r in x:
     volume = get_fieldvalues(r, "773__v")
