@@ -1,4 +1,3 @@
-#Did 5 files, didn't get the final 10 records....
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
