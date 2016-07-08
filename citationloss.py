@@ -1,3 +1,7 @@
+"""
+Extracts recids from RT search output for the citationloss queue and runs bibrank on the recids
+"""
+
 import re
 import datetime
 import subprocess
