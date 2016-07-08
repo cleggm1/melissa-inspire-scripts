@@ -1,3 +1,7 @@
+"""
+Creates an html file of INSPIRE-HEP submissions with ORCID attached
+"""
+
 from sys import argv
 
 script, filename = argv
