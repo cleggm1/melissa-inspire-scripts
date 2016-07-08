@@ -1,3 +1,7 @@
+""" Creates XML files that removes INSPIRE-IDs that are listed twice for different authors,
+    based on a list of recids and their associatd problem INSPIRE-IDs
+"""
+
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
