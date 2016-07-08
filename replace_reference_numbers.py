@@ -1,3 +1,7 @@
+"""
+Changes $$o of references in text MARC from hep-th, hep-ex, etc. to a number
+Useful when separately extracting a large block of references that should belong to a single $$o
+"""
 import re
 
 filename_in = 'tmp_refs.in'
