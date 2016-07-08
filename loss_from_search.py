@@ -1,3 +1,7 @@
+"""
+Runs bibrank on all records in a search
+"""
+
 import re
 import sys
 import datetime
