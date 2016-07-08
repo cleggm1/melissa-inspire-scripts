@@ -1,3 +1,8 @@
+"""
+From RT input, extracts recids of HEPJobs records that should be removed from the search results
+and creates an XML file that changes 980__a:JOB to 980__a:JOBHIDDEN
+"""
+
 from invenio.bibrecord import print_rec, record_add_field
 from invenio.search_engine import perform_request_search
 import re
