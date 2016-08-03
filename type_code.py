@@ -82,17 +82,17 @@ def add_code(record, type_code, journals, dois, codes):
     add_type_code = False
     if type_code == 'Published':
         if type_code not in codes:
-            for key, val in JOURNAL_PUBLISHED_DICT:
+            for key, val in JOURNAL_PUBLISHED_DICT.items():
                 if key in journals or val in dois:
                     add_type_code = True
     if type_code == 'ConferencePaper':
         if type_code not in codes:
-            for key, val in CONFERENCE_DICT:
+            for key, val in CONFERENCE_DICT.items():
                 if key in journals or val in dois:
                     add_type_code = True
     if type_code == 'Review':
         if type_code not in codes:
-            for key, val in REVIEW_DICT:
+            for key, val in REVIEW_DICT.items():
                 if key in journals or val in dois:
                     add_type_code = True
     if add_type_code:
