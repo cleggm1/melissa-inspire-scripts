@@ -78,29 +78,27 @@ REVIEW_DICT = {"Prog.Part.Nucl.Phys.":"10.1016/j.ppnp.",
 
 type_codes = ['Published', 'Review', 'ConferencePaper']
 
-def add_code(record, type_code, journals, dois, codes):
-    add_type_code = False
-    if type_code == 'Published':
-        if type_code not in codes:
-            for key, val in JOURNAL_PUBLISHED_DICT.items():
-                if key in journals or val in dois:
-                    add_type_code = True
-    if type_code == 'ConferencePaper':
-        if type_code not in codes:
-            for key, val in CONFERENCE_DICT.items():
-                if key in journals or val in dois:
-                    add_type_code = True
-    if type_code == 'Review':
-        if type_code not in codes:
-            for key, val in REVIEW_DICT.items():
-                if key in journals or val in dois:
-                    add_type_code = True
-    if add_type_code:
-        record.add_field('980__', '', subfields=[('a', type_code)]
+def try_dict(dict):
+    if type_code not in codes:
+        for key, val in dict.items():
+            if key in journals:
+                return True
+            elif val:
+                if any(val in d for d in dois):
+                    return True
 
 def check_record(record):
     journals = get_fieldvalues(record, '773__p')
     dois = get_fieldvalues(record, '0247_a')
     codes = get_fieldvalues(record, '980__a')
     for type_code in type_codes:
-        add_code(record, type_code, journals, dois, codes)
+        if type_code == 'Published':
+            if try_dict(JOURNAL_PUBLISHED_DICT):
+                record.add_field('980__', '', subfields=[('a', type_code)]
+        if type_code == 'ConferencePaper':
+            if try_dict(CONFERENCE_DICT):
+                record.add_field('980__', '', subfields=[('a', type_code)]
+        if type_code == 'Review':
+            if try_dict(REVIEW_DICT):
+                record.add_field('980__', '', subfields=[('a', type_code)]
+
