@@ -22,7 +22,7 @@
     contain published, conference, or review papers
 """
 
-from invenio.search_engine import perform_request_search, get_fieldvalues
+from invenio.search_engine import get_fieldvalues
 
 JOURNAL_PUBLISHED_DICT = {"Ann.Rev.Astron.Astrophys.":"10.1146/annurev-astro",
 "Astron.Astrophys.":"10.1051/0004-6361/",
