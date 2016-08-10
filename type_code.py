@@ -76,43 +76,30 @@ REVIEW_DICT = {"Prog.Part.Nucl.Phys.":"10.1016/j.ppnp.",
 
 
 test_records = [43747, 614, 1713, 1113, 1476529]
-###TS: a single space required after ',' in most context
 type_codes = (('Published', JOURNAL_PUBLISHED_DICT), ('Review', REVIEW_DICT),
               ('ConferencePaper', CONFERENCE_DICT))
-###TS: use an immutable instead of a list
-###TS: combined the dict and the type code
 
 
 def try_dict(mapping, type_code=None, journals=None, dois=None, codes=None):
     """check if information matches the criteria from mapping"""
-    ###TS: pass all variables instead of relying on globals
-    ###TS:  this becomes relevant even more when you make check_record a function with its own scope
-    ###TS:  but avoiding globals is always good
-    ###TS: don't call the argument "dict" that is a reserved word
-    ###TS: always provide a doc string
     if type_code not in codes:
         for key, val in mapping.iteritems():
-            ###TS: I use iteritems() here instead of items() since that is more efficient and
-            ###TS: doesn't flatten the dict upfront
             if key in journals:
                 return True
 
             if val:
-            ###TS: if statement here, because if key matches code already returned
                 if any(val in d for d in dois):
                     return True
 
 
 def check_record(record):
     """check that record has proper type code based on pubnote and doi"""
-    ###TS: alwasy provide a docstring
     journals = get_fieldvalues(record, '773__p')
     dois = get_fieldvalues(record, '0247_a')
     codes = get_fieldvalues(record, '980__a')
 
     for type_code, mapping in type_codes:
         if try_dict(mapping, type_code=type_code, journals=journals, dois=dois, codes=codes):
-            ###TS: simplified the code here by using tuples in type_codes
             print "Adding 980__a:%s to record %i" % (type_code, record)
             # record.add_field('980__', '', subfields=[('a', type_code)]
 
