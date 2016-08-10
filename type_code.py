@@ -76,6 +76,7 @@ REVIEW_DICT = {"Prog.Part.Nucl.Phys.":"10.1016/j.ppnp.",
 "Rev.Accel.Sci.Tech.":"10.1142/S17936268"
 }
 
+test_records = [43747,614,1713,1113,1476529]
 type_codes = ['Published', 'Review', 'ConferencePaper']
 
 def try_dict(dict):
@@ -87,18 +88,22 @@ def try_dict(dict):
                 if any(val in d for d in dois):
                     return True
 
-def check_record(record):
+#def check_record(record):
+for record in test_records:
     journals = get_fieldvalues(record, '773__p')
     dois = get_fieldvalues(record, '0247_a')
     codes = get_fieldvalues(record, '980__a')
     for type_code in type_codes:
         if type_code == 'Published':
             if try_dict(JOURNAL_PUBLISHED_DICT):
-                record.add_field('980__', '', subfields=[('a', type_code)]
+                print "Adding 980__a:%s to record %i" % (type_code, record)
+#                record.add_field('980__', '', subfields=[('a', type_code)]
         if type_code == 'ConferencePaper':
             if try_dict(CONFERENCE_DICT):
-                record.add_field('980__', '', subfields=[('a', type_code)]
+                print "Adding 980__a:%s to record %i" % (type_code, record)
+#                record.add_field('980__', '', subfields=[('a', type_code)]
         if type_code == 'Review':
             if try_dict(REVIEW_DICT):
-                record.add_field('980__', '', subfields=[('a', type_code)]
+                print "Adding 980__a:%s to record %i" % (type_code, record)
+#                record.add_field('980__', '', subfields=[('a', type_code)]
 
