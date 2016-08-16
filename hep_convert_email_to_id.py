@@ -76,7 +76,7 @@ def check_record(record):
           inspire_id_true = True
         if code == 'j':
           if 'ORCID:' in value:
-            orcid = value:
+            orcid = value
             orcid_true = True
       if ids[0]:
           if inspire_id_true:
