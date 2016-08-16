@@ -46,7 +46,8 @@ def convert_email_to_id(email):
     reclist = perform_request_search(p = \
         emailsearch % (email, email, email, email), cc='HepNames')
     if len(reclist) > 1:
-      record.warn("More than one HEPNames record contains this email: %s" % email)
+      print "More than one HEPNames record contains this email: %s" % email
+#      record.warn("More than one HEPNames record contains this email: %s" % email)
     if len(reclist) == 1:
       recid = int(reclist[0])
       inspire_id = get_id(recid, id_type='INSPIRE')
@@ -81,21 +82,26 @@ def check_record(record):
       if ids[0]:
           if inspire_id_true:
             if inspire_id == ids[0]:
+              print "%s in %s already has an INSPIRE-ID" % (email, record)
               pass
             else:
-              record.warn("%s from HEPNames doesn't match id for author %s in record %s (%s)" % (ids[0], email, record, inspire_id))
+              print "%s from HEPNames doesn't match id for author %s in record %s (%s)" % (ids[0], email, record, inspire_id)
+#              record.warn("%s from HEPNames doesn't match id for author %s in record %s (%s)" % (ids[0], email, record, inspire_id))
           else:
             additions.append(('i', ids[0]))
       if ids[1]:
         if orcid_true:
-          if orcid == ids[1]
+          if orcid == ids[1]:
+            print "%s in %s already has an ORICD" % (email, record)
             pass
-          else
-            record.warn("%s from HEPNames doesn't match id for author %s in record %s (%s)" % (ids[1], email, recid, orcid))
+          else:
+            print "%s from HEPNames doesn't match id for author %s in record %s (%s)" % (ids[1], email, recid, orcid)
+#            record.warn("%s from HEPNames doesn't match id for author %s in record %s (%s)" % (ids[1], email, recid, orcid))
         else:
           additions.append(('j', ids[1]))
       for addition in additions:
-          record_add_subfield_into(record, tag, addition[0], addition[1], field_position_local=field_instance[0])
+        print "Adding %s to %s in %s" % (addition[1], email, record)
+#          record_add_subfield_into(record, tag, addition[0], addition[1], field_position_local=field_instance[0])
 
 if __name__ == '__main__':
     for record in test_records:
