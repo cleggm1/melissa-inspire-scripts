@@ -56,7 +56,7 @@ def convert_email_to_id(email):
 
 
 def check_record(record):
-"""gets emails from author fields in record and tries to match them with INSPIRE-ID/ORCID from HEPNames"""
+  """gets emails from author fields in record and tries to match them with INSPIRE-ID/ORCID from HEPNames"""
   tags = ('100__', '700__')
   for tag in tags:
     field_instances = record_get_field_instances(record, \
