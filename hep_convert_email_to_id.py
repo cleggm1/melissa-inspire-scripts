@@ -28,7 +28,7 @@ from invenio.bibrecord import print_rec, record_get_field_instances, \
      record_add_field
 from invenio.bibformat_engine import BibFormatObject
 
-test_records = []
+test_records = [1474920, 1477275, 1474311, 1477281]
 
 def get_id(record, id_type=None):
     """Returns any id with a HEPNames recid"""
@@ -45,10 +45,12 @@ def convert_email_to_id(email):
     emailsearch = '371__m:%s or 371__o:%s or 595__o:%s or 595__m:%s'
     reclist = perform_request_search(p = \
         emailsearch % (email, email, email, email), cc='HepNames')
+    if len(reclist) > 1:
+      record.warn("More than one HEPNames record contains this email: %s" % email)
     if len(reclist) == 1:
       recid = int(reclist[0])
       inspire_id = get_id(recid, id_type='INSPIRE')
-      orcid      = get_id(recid, id_type='ORCID')
+      orcid      = "ORCID:" + get_id(recid, id_type='ORCID')
       return (inspire_id, orcid)
 
 
@@ -59,33 +61,41 @@ def check_record(record):
     field_instances = record_get_field_instances(record, \
                                                  tag[0:3], tag[3], tag[4])
     for field_instance in field_instances:
-      new_value = None
+      email_true = False
+      inspire_id_true = False
+      orcid_true = False
+      ids = None
+      additions = []
       for code, value in field_instance[0]:
         if code == 'm':
           email = value
-          new_value = convert_email_to_id(value)
-          if new_value[0]:
-            if 'INSPIRE' in val for code, val in field_instance[0]:
-              if val == new_value[0]:
-                pass
-              else:
-                record.warn("%s from HEPNames doesn't match id for author %s in record %s" % (new_value[0], email, recid))
+          email_true = True
+          ids = convert_email_to_id(email)
+        if code == 'i':
+          inspire_id = value
+          inspire_id_true = True
+        if code == 'j':
+          if 'ORCID:' in value:
+            orcid = value:
+            orcid_true = True
+      if ids[0]:
+          if inspire_id_true:
+            if inspire_id == ids[0]:
+              pass
             else:
-              value = new_value[0]
-              code = 'i'
-              flag = True
-              record_add_subfield_into(record, tag, code, value, field_position_local=field_instance[0])
-          if new_value[1]:
-            value = 'ORCID:' + new_value[1]
-            if 'ORCID' in val for code, val in field_instance[0]:
-              if val == value:
-                pass
-              else
-                record.warn("%s from HEPNames doesn't match id for author %s in record %s" % (new_value[1], email, recid))
-            else:
-              code = 'j'
-              flag = True
-              record_add_subfield_into(record, tag, code, value, field_position_local=field_instance[0])
+              record.warn("%s from HEPNames doesn't match id for author %s in record %s (%s)" % (ids[0], email, record, inspire_id))
+          else:
+            additions.append(('i', ids[0]))
+      if ids[1]:
+        if orcid_true:
+          if orcid == ids[1]
+            pass
+          else
+            record.warn("%s from HEPNames doesn't match id for author %s in record %s (%s)" % (ids[1], email, recid, orcid))
+        else:
+          additions.append(('j', ids[1]))
+      for addition in additions:
+          record_add_subfield_into(record, tag, addition[0], addition[1], field_position_local=field_instance[0])
 
 if __name__ == '__main__':
     for record in test_records:
