@@ -1,7 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-"""Replaces old aff with new aff in instances where the affiliation in skip_aff doesn't exist"""
+"""
+Replaces old aff with new aff. If specified affiliation(s) already in field, 
+the old aff will be deleted without adding a new aff
+"""
 
 from invenio.search_engine import perform_request_search, get_record
 from invenio.bibrecord import print_rec, record_get_field_instances, \
@@ -10,7 +13,7 @@ import re
 
 old_aff = 'Lebedev Res. Ctr. Phys., Moscow'
 new_aff = 'LPI, Moscow (main)'
-skip_aff = 'Lebedev Inst.'
+skip_aff = ['Lebedev Inst.']
 VERBOSE = True
 VERBOSE = False
 
@@ -25,10 +28,11 @@ def create_xml(recid, old_aff=None, new_aff=None, skip_aff=None):
         for field_instance in field_instances:
             correct_subfields = []
             skip_aff_exists = False
-            if any(val for code, val in field_instance[0] if skip_aff in val):
-                skip_aff_exists = True
-                if VERBOSE:
-                    print "%s exists, deleting %s" % (skip_aff, old_aff)
+            for aff in skip_aff:
+                if any(val for code, val in field_instance[0] if aff in val):
+                    skip_aff_exists = True
+                    if VERBOSE:
+                        print "%s exists, deleting %s" % (aff, old_aff)
             if skip_aff_exists:
                 for code, value in field_instance[0]:
                     if code == 'u':
