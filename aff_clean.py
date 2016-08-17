@@ -1,6 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+"""Replaces old aff with new aff in instances where the affiliation in skip_aff doesn't exist"""
+
 from invenio.search_engine import perform_request_search, get_record
 from invenio.bibrecord import print_rec, record_get_field_instances, \
 record_add_field
@@ -13,7 +15,6 @@ VERBOSE = True
 VERBOSE = False
 
 def create_xml(recid, old_aff=None, new_aff=None, skip_aff=None):
-    """Replaces old aff with new aff in instances where the affiliation in skip_aff doesn't exist"""
     record = get_record(recid)
     correct_record = {}
     tags = ('100__', '700__')
@@ -74,6 +75,4 @@ if __name__ == '__main__':
     try:
         main()
     except KeyboardInterrupt:
-        print 'Exiting'  
-                        
-                    
+        print 'Exiting' 
