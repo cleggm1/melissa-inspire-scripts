@@ -1,6 +1,13 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+"""
+Finds incorrectly formated journal references (based on search)
+and returns html page of links to records in which the 999C5 fields
+need to be fixed (i.e. the reference doesn't already contain an r or 0 subfield)
+"""
+
+
 from invenio.search_engine import perform_request_search, get_record
 from invenio.bibrecord import record_get_field_instances
 import re
