@@ -23,7 +23,7 @@
   while removing 100__m and 700__m
 """
 
-from invenio.search_engine import perform_request_search
+from invenio.search_engine import perform_request_search, get_record
 from invenio.bibrecord import print_rec, record_get_field_instances, \
      record_add_field
 from invenio.bibformat_engine import BibFormatObject
@@ -34,8 +34,8 @@ def get_id(record, id_type=None):
     """Returns any id with a HEPNames recid"""
     author_id = None
     for item in BibFormatObject(record).fields('035__'):
-        if item.has_key('9') and item['9'] == id_type and item.has_key('a'):
-            author_id = item['a']
+      if item.has_key('9') and item['9'] == id_type and item.has_key('a'):
+        author_id = item['a']
     return author_id
 
 def convert_email_to_id(email):
@@ -82,7 +82,6 @@ def check_record(record):
           if inspire_id_true:
             if inspire_id == ids[0]:
               print "%s in %s already has an INSPIRE-ID" % (email, record)
-              pass
             else:
               print "%s from HEPNames doesn't match id for author %s in record %s (%s)" % (ids[0], email, record, inspire_id)
 #              record.warn("%s from HEPNames doesn't match id for author %s in record %s (%s)" % (ids[0], email, record, inspire_id))
@@ -92,7 +91,6 @@ def check_record(record):
         if orcid_true:
           if orcid == ids[1]:
             print "%s in %s already has an ORICD" % (email, record)
-            pass
           else:
             print "%s from HEPNames doesn't match id for author %s in record %s (%s)" % (ids[1], email, recid, orcid)
 #            record.warn("%s from HEPNames doesn't match id for author %s in record %s (%s)" % (ids[1], email, recid, orcid))
@@ -103,5 +101,6 @@ def check_record(record):
 #          record_add_subfield_into(record, tag, addition[0], addition[1], field_position_local=field_instance[0])
 
 if __name__ == '__main__':
-    for record in test_records:
+    for r in test_records:
+      record = get_record(r)
       check_record(record)
