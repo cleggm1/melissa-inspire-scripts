@@ -50,8 +50,10 @@ def convert_email_to_id(email):
 #      record.warn("More than one HEPNames record contains this email: %s" % email)
     if len(reclist) == 1:
       recid = int(reclist[0])
-      inspire_id = get_id(recid, id_type='INSPIRE')
-      orcid      = "ORCID:" + get_id(recid, id_type='ORCID')
+      if get_id(recid, id_type='INSPIRE'):
+        inspire_id = get_id(recid, id_type='INSPIRE')
+      if get_id(recid, id_type='ORCID'):
+        orcid      = "ORCID:" + get_id(recid, id_type='ORCID')
       return (inspire_id, orcid)
 
 
@@ -64,7 +66,7 @@ def check_record(record):
       email_true = False
       inspire_id_true = False
       orcid_true = False
-      ids = None
+      ids = []
       additions = []
       for code, value in field_instance[0]:
         if code == 'm':
@@ -78,24 +80,25 @@ def check_record(record):
           if 'ORCID:' in value:
             orcid = value
             orcid_true = True
-      if ids[0]:
-          if inspire_id_true:
-            if inspire_id == ids[0]:
-              print "%s in %s already has an INSPIRE-ID" % (email, record)
+      if ids:
+          if ids[0]:
+              if inspire_id_true:
+                if inspire_id == ids[0]:
+                  print "%s in %s already has an INSPIRE-ID" % (email, record)
+                else:
+                  print "%s from HEPNames doesn't match id for author %s in record %s (%s)" % (ids[0], email, record, inspire_id)
+#                  record.warn("%s from HEPNames doesn't match id for author %s in record %s (%s)" % (ids[0], email, record, inspire_id))
+              else:
+                additions.append(('i', ids[0]))
+          if ids[1]:
+            if orcid_true:
+              if orcid == ids[1]:
+                print "%s in %s already has an ORICD" % (email, record)
+              else:
+                print "%s from HEPNames doesn't match id for author %s in record %s (%s)" % (ids[1], email, recid, orcid)
+#                record.warn("%s from HEPNames doesn't match id for author %s in record %s (%s)" % (ids[1], email, recid, orcid))
             else:
-              print "%s from HEPNames doesn't match id for author %s in record %s (%s)" % (ids[0], email, record, inspire_id)
-#              record.warn("%s from HEPNames doesn't match id for author %s in record %s (%s)" % (ids[0], email, record, inspire_id))
-          else:
-            additions.append(('i', ids[0]))
-      if ids[1]:
-        if orcid_true:
-          if orcid == ids[1]:
-            print "%s in %s already has an ORICD" % (email, record)
-          else:
-            print "%s from HEPNames doesn't match id for author %s in record %s (%s)" % (ids[1], email, recid, orcid)
-#            record.warn("%s from HEPNames doesn't match id for author %s in record %s (%s)" % (ids[1], email, recid, orcid))
-        else:
-          additions.append(('j', ids[1]))
+              additions.append(('j', ids[1]))
       for addition in additions:
         print "Adding %s to %s in %s" % (addition[1], email, record)
 #          record_add_subfield_into(record, tag, addition[0], addition[1], field_position_local=field_instance[0])
