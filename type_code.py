@@ -24,7 +24,18 @@
 
 from invenio.search_engine import get_fieldvalues
 
-JOURNAL_PUBLISHED_DICT = {"Ann.Rev.Astron.Astrophys.":"10.1146/annurev-astro",
+JOURNAL_PUBLISHED_DICT = {"Ann.Rev.Nucl.Part.Sci.":None,
+                          "Ann.Rev.Astron.Astrophys.":"10.1146/annurev-astro",
+                          "Ann.Rev.Phys.Chem.":None,
+                          "Ann.Rev.Fluid Mech.":None,
+                          "Ann.Rev.Earth Planet.Sci.":None,
+                          "Ann.Rev.Psych.":None,
+                          "Ann.Rev.Mater.Sci.":None,
+                          "Ann.Rev.Physiol.":None,
+                          "Ann.Rev.Biophys.Biomol.Struct.":None,
+                          "Ann.Rev.Condensed Matter Phys.":None,
+                          "Ann.Rev.Biophys.":None,
+                          "Ann.Rev.Biophys.Bioeng.":None,
                           "Astron.Astrophys.":"10.1051/0004-6361/",
                           "Astron.J.":"10.1088/0004-6256/",
                           "Astron.Astrophys.Suppl.Ser.":None,
