@@ -92,13 +92,12 @@ type_codes = (('Published', JOURNAL_PUBLISHED_DICT), ('Review', REVIEW_DICT),
               ('ConferencePaper', CONFERENCE_DICT))
 
 
-def try_dict(mapping, type_code=None, journals=None, pub_year=None, dois=None, codes=None):
+def try_dict(mapping, type_code=None, journals=None, dois=None, codes=None):
     """check if information matches the criteria from mapping"""
     if type_code not in codes:
         for key, val in mapping.iteritems():
             if key in journals:
-                if pub_year:
-                    return True
+                return True
 
             if val:
                 if any(val in d for d in dois):
@@ -108,12 +107,11 @@ def try_dict(mapping, type_code=None, journals=None, pub_year=None, dois=None, c
 def check_record(record):
     """check that record has proper type code based on pubnote and doi"""
     journals = get_fieldvalues(record, '773__p')
-    pub_year = get_fieldvalues(record, '773__y')
     dois = get_fieldvalues(record, '0247_a')
     codes = get_fieldvalues(record, '980__a')
 
     for type_code, mapping in type_codes:
-        if try_dict(mapping, type_code=type_code, journals=journals, pub_year=pub_year, dois=dois, codes=codes):
+        if try_dict(mapping, type_code=type_code, journals=journals, dois=dois, codes=codes):
             #print "Adding 980__a:%s to record %i" % (type_code, record)
             record.add_field('980__', '', subfields=[('a', type_code)]
 
