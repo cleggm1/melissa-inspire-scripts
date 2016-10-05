@@ -87,7 +87,7 @@ REVIEW_DICT = {"Prog.Part.Nucl.Phys.":"10.1016/j.ppnp.",
                "Rev.Accel.Sci.Tech.":"10.1142/S17936268"}
 
 
-#test_records = [43747, 614, 1713, 1113, 1476529]
+test_records = []
 type_codes = (('Published', JOURNAL_PUBLISHED_DICT), ('Review', REVIEW_DICT),
               ('ConferencePaper', CONFERENCE_DICT))
 
