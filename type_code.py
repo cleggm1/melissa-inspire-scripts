@@ -113,7 +113,7 @@ def check_record(record):
     for type_code, mapping in type_codes:
         if try_dict(mapping, type_code=type_code, journals=journals, dois=dois, codes=codes):
             #print "Adding 980__a:%s to record %i" % (type_code, record)
-            record.add_field('980__', '', subfields=[('a', type_code)]
+            record.add_field('980__', '', subfields=[('a', type_code)])
 
 
 if __name__ == '__main__':
