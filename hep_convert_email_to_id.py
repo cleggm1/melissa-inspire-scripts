@@ -22,6 +22,8 @@
   HEPNames records and add associated INSPIRE-IDs and ORCIDs to 100__i/j and 700__i/j
   while removing 100__m and 700__m
 """
+# 2016-10-24 Haven't added anything that removes emails yet
+
 
 from invenio.search_engine import perform_request_search, get_fieldvalues
 from invenio.bibrecord import print_rec, record_add_field, record_get_field_value
@@ -31,7 +33,7 @@ import re
 from invenio.bibcheck_task import AmendableRecord
 from invenio.bibedit_utils import get_bibrecord
 
-test_records = [1474920, 1477275, 1474311, 1477281, 1491028, 1490919]
+test_records = [1494000, 1493788, 1490920]
 
 def get_id(record, id_type=None):
     """Returns any id with a HEPNames recid"""
@@ -84,7 +86,7 @@ def check_record(record):
             if subfield_tag == 'm':
                 email = item[1]
                 print 'email:',email
-                ids = convert_email_to_id(email)
+                ids.append((key, convert_email_to_id(email), email))
             if subfield_tag == 'i':
                 inspire_id = item[1]
                 inspire_id_true = True
@@ -95,27 +97,31 @@ def check_record(record):
                     orcid_true = True
                     print 'ORCID:',orcid
         if ids:
-              if ids[0]:
-                  if inspire_id_true:
-                    if inspire_id == ids[0]:
-                      print "%s in %s already has an INSPIRE-ID %s" % (email, recid, inspire_id)
+              for id in ids:
+                  if id[1][0]:
+                      if inspire_id_true:
+                        if inspire_id == id[1][0]:
+                          print "%s in %s already has an INSPIRE-ID %s" % (id[2], recid, inspire_id)
+                        else:
+                          print "%s from HEPNames doesn't match id for author %s in record %s (%s)" % (id[1][0], id[2], recid, inspire_id)
+#                          record.warn("%s from HEPNames doesn't match id for author %s in record %s (%s)" % (id[1][0], id[2], record, inspire_id))
+                      else:
+                        print "email: %s, inspire-id: %s" % (id[2], id[1][0])
+                        additions.append((id[0], 'i', id[1][0]))
+                  if id[1][1]:
+                    if orcid_true:
+                      if orcid == id[1][1]:
+                        print "%s in %s already has an ORICD" % (id[2], recid)
+                      else:
+                        print "%s from HEPNames doesn't match id for author %s in record %s (%s)" % (id[1][1], id[2], recid, orcid)
+#                        record.warn("%s from HEPNames doesn't match id for author %s in record %s (%s)" % (id[1][1], id[2], recid, orcid))
                     else:
-                      print "%s from HEPNames doesn't match id for author %s in record %s (%s)" % (ids[0], email, recid, inspire_id)
-#                      record.warn("%s from HEPNames doesn't match id for author %s in record %s (%s)" % (ids[0], email, record, inspire_id))
-                  else:
-                    additions.append(('i', ids[0]))
-              if ids[1]:
-                if orcid_true:
-                  if orcid == ids[1]:
-                    print "%s in %s already has an ORICD" % (email, recid)
-                  else:
-                    print "%s from HEPNames doesn't match id for author %s in record %s (%s)" % (ids[1], email, recid, orcid)
-#                    record.warn("%s from HEPNames doesn't match id for author %s in record %s (%s)" % (ids[1], email, recid, orcid))
-                else:
-                  additions.append(('j', ids[1]))
-        for addition in additions:
-            print "Adding %s to %s in %s" % (addition[1], email, recid)
-#              record_add_subfield_into(record, tag, addition[0], addition[1], field_position_local=field_instance[0])
+                      print "email: %s, orcid: %s" % (id[2], id[1][1])
+                      additions.append((id[0], 'j', id[1][1]))
+    print "additions: ", additions
+    for addition in additions:
+        print "Adding %s to tag %s at position %s in %s" % (addition[2], addition[0][0], addition[0][1], recid)
+#          record_add_subfield_into(record, addition[0][0], addition[1], addition[2], field_position_local=addition[0][1])
 
 if __name__ == '__main__':
     for r in test_records:
