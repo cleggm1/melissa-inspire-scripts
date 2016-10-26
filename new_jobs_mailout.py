@@ -55,11 +55,11 @@ Please send any comments or questions to <a href="mailto:jobs@inspirehep.net">jo
     msg.attach(part2)
 
     # Send the message via local SMTP server.
-#    stmp_email = smtplib.SMTP('localhost')
+    stmp_email = smtplib.SMTP('localhost')
     # sendmail function takes 3 arguments: sender's address, recipient's address
     # and message to send - here it is sent as one string.
-#    stmp_email.sendmail(hepjobs_email, hepjobs_email, msg.as_string())
-#    stmp_email.quit()
+    stmp_email.sendmail(hepjobs_email, hepjobs_email, msg.as_string())
+    stmp_email.quit()
 
 def main():
     content = []
