@@ -1,3 +1,9 @@
+"""Sends latest postings in HEPJobs to mailing list. Requires existence of a file called "tmp_new_jobs_mailout_log".
+   log file should contain the last date the mailout was sent and the most recent recid sent.
+   Script will find records on or after this date and larger than the most recent recid
+   If the log file is empty, script will prompt you for a date to use.
+   """
+
 import datetime
 import re
 from invenio.search_engine import perform_request_search, print_record
