@@ -22,13 +22,18 @@
   HEPNames records and add associated INSPIRE-IDs and ORCIDs to 100__i/j and 700__i/j
   while removing 100__m and 700__m
 """
+# 2016-10-24 Haven't added anything that removes emails yet
 
-from invenio.search_engine import perform_request_search, get_record
-from invenio.bibrecord import print_rec, record_get_field_instances, \
-     record_add_field
+
+from invenio.search_engine import perform_request_search, get_fieldvalues
+from invenio.bibrecord import print_rec, record_add_field, record_get_field_value
 from invenio.bibformat_engine import BibFormatObject
+import re
 
-test_records = [1474920, 1477275, 1474311, 1477281]
+from invenio.bibcheck_task import AmendableRecord
+from invenio.bibedit_utils import get_bibrecord
+
+test_records = [1494000, 1493788, 1490920]
 
 def get_id(record, id_type=None):
     """Returns any id with a HEPNames recid"""
@@ -43,13 +48,13 @@ def convert_email_to_id(email):
     inspire_id = None
     orcid      = None
     emailsearch = '371__m:%s or 371__o:%s or 595__o:%s or 595__m:%s'
-    reclist = perform_request_search(p = \
-        emailsearch % (email, email, email, email), cc='HepNames')
+    reclist = perform_request_search(p=emailsearch % (email, email, email, email), cc='HepNames')
     if len(reclist) > 1:
       print "More than one HEPNames record contains this email: %s" % email
 #      record.warn("More than one HEPNames record contains this email: %s" % email)
     if len(reclist) == 1:
       recid = int(reclist[0])
+      print "Found %s in HEPNames record" % email
       if get_id(recid, id_type='INSPIRE'):
         inspire_id = get_id(recid, id_type='INSPIRE')
       if get_id(recid, id_type='ORCID'):
@@ -59,51 +64,67 @@ def convert_email_to_id(email):
 
 def check_record(record):
     """gets emails from author fields in record and tries to match them with INSPIRE-ID/ORCID from HEPNames"""
+    recid = record_get_field_value(record,'001','','','')
     tags = ('100__', '700__')
-    for tag in tags:
-      field_instances = record_get_field_instances(record, tag[0:3], tag[3], tag[4])
-    for field_instance in field_instances:
-      email_true = False
-      inspire_id_true = False
-      orcid_true = False
-      ids = []
-      additions = []
-      for code, value in field_instance[0]:
-        if code == 'm':
-          email = value
-          email_true = True
-          ids = convert_email_to_id(email)
-        if code == 'i':
-          inspire_id = value
-          inspire_id_true = True
-        if code == 'j':
-          if 'ORCID:' in value:
-            orcid = value
-            orcid_true = True
-      if ids:
-          if ids[0]:
-              if inspire_id_true:
-                if inspire_id == ids[0]:
-                  print "%s in %s already has an INSPIRE-ID" % (email, record)
-                else:
-                  print "%s from HEPNames doesn't match id for author %s in record %s (%s)" % (ids[0], email, record, inspire_id)
-#                  record.warn("%s from HEPNames doesn't match id for author %s in record %s (%s)" % (ids[0], email, record, inspire_id))
-              else:
-                additions.append(('i', ids[0]))
-          if ids[1]:
-            if orcid_true:
-              if orcid == ids[1]:
-                print "%s in %s already has an ORICD" % (email, record)
-              else:
-                print "%s from HEPNames doesn't match id for author %s in record %s (%s)" % (ids[1], email, recid, orcid)
-#                record.warn("%s from HEPNames doesn't match id for author %s in record %s (%s)" % (ids[1], email, recid, orcid))
-            else:
-              additions.append(('j', ids[1]))
-      for addition in additions:
-        print "Adding %s to %s in %s" % (addition[1], email, record)
-#          record_add_subfield_into(record, tag, addition[0], addition[1], field_position_local=field_instance[0])
+    subfields = ('m', 'i', 'j')
+    fields_dict = {}
+    additions = []
+    for x, y in [(x,y) for x in tags for y in subfields]:
+      for pos, val in record.iterfield(x+y):
+          if (x, pos[1]) in fields_dict:
+              fields_dict[(x,pos[1])].append((pos, val))
+          else:
+              fields_dict[(x,pos[1])] = [(pos, val)]
+    print fields_dict
+    for key in fields_dict:
+        inspire_id_true = False
+        orcid_true = False
+        ids = []
+        for item in fields_dict[key]:
+            matchObj = re.match('\w{5}(\w)', item[0][0])
+            subfield_tag = matchObj.group(1)
+            if subfield_tag == 'm':
+                email = item[1]
+                print 'email:',email
+                ids.append((key, convert_email_to_id(email), email))
+            if subfield_tag == 'i':
+                inspire_id = item[1]
+                inspire_id_true = True
+                print 'INSPIRE-ID:',inspire_id
+            if subfield_tag == 'j':
+                if 'ORCID:' in item[1]:
+                    orcid = item[1]
+                    orcid_true = True
+                    print 'ORCID:',orcid
+        if ids:
+              for id in ids:
+                  if id[1][0]:
+                      if inspire_id_true:
+                        if inspire_id == id[1][0]:
+                          print "%s in %s already has an INSPIRE-ID %s" % (id[2], recid, inspire_id)
+                        else:
+                          print "%s from HEPNames doesn't match id for author %s in record %s (%s)" % (id[1][0], id[2], recid, inspire_id)
+#                          record.warn("%s from HEPNames doesn't match id for author %s in record %s (%s)" % (id[1][0], id[2], record, inspire_id))
+                      else:
+                        print "email: %s, inspire-id: %s" % (id[2], id[1][0])
+                        additions.append((id[0], 'i', id[1][0]))
+                  if id[1][1]:
+                    if orcid_true:
+                      if orcid == id[1][1]:
+                        print "%s in %s already has an ORICD" % (id[2], recid)
+                      else:
+                        print "%s from HEPNames doesn't match id for author %s in record %s (%s)" % (id[1][1], id[2], recid, orcid)
+#                        record.warn("%s from HEPNames doesn't match id for author %s in record %s (%s)" % (id[1][1], id[2], recid, orcid))
+                    else:
+                      print "email: %s, orcid: %s" % (id[2], id[1][1])
+                      additions.append((id[0], 'j', id[1][1]))
+    print "additions: ", additions
+    for addition in additions:
+        print "Adding %s to tag %s at position %s in %s" % (addition[2], addition[0][0], addition[0][1], recid)
+#          record_add_subfield_into(record, addition[0][0], addition[1], addition[2], field_position_local=addition[0][1])
 
 if __name__ == '__main__':
     for r in test_records:
-      record = get_record(r)
+      print 'working on ', r
+      record = AmendableRecord(get_bibrecord(r))
       check_record(record)
