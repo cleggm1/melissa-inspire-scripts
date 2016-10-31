@@ -7,8 +7,8 @@ from email.mime.text import MIMEText
 
 def send_jobs_mail():
     try_send = True
-    content = ""
     while try_send:
+        content = ""
         print "Paste records to include in the mailout (he format). Type 'done' on a blank line when finished: "
         stopword = False
         while not stopword:
@@ -38,7 +38,7 @@ def send_jobs_mail():
 To unsubscribe from this list do NOT reply to this email.<br />
 Instead send email to <a href="mailto:listserv@fnal.gov">listserv@fnal.gov</a>.
 In the body of the e-mail type:<br />
-&nbsp;&nbsp;&nbsp;&nbsp;signoff jobs<br />
+signoff jobs<br />
 Do not include any other text or type anything in the subject line.<br />
 *********************************************************</p>
 <p>The INSPIRE HEPJobs database is administered by the Fermilab Library.<br />
@@ -49,7 +49,7 @@ Please send any comments or questions to <a href="mailto:jobs@inspirehep.net">jo
         send = raw_input("Mailout OK to send? (y/n): ")
         if send == 'y':
             hepjobs_email = '"HEPJobs Database Administrator" <jobs@inspirehep.net>'
-#            bcc = 'jobs@fnal.gov,hoc@fnal.gov'
+#            bcc = 'jobs@fnal.gov,hoc@fnal.gov,cleggm1@fnal.gov'
             bcc = 'cleggm1@fnal.gov,hoc@fnal.gov'
 
             # Create message container - the correct MIME type is
