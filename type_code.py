@@ -120,5 +120,5 @@ def check_record(record):
 
 if __name__ == '__main__':
     for record in test_records:
-        record = AmendableRecord(get_bibrecord(r))
+        record = AmendableRecord(get_bibrecord(record))
         check_record(record)
