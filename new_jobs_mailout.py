@@ -6,9 +6,9 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 def send_jobs_mail():
-    try_send = 1
+    try_send = True
     content = ""
-    while try_send == 1:
+    while try_send:
         print "Paste records to include in the mailout (he format). Type 'done' on a blank line when finished: "
         stopword = False
         while not stopword:
@@ -79,7 +79,7 @@ Please send any comments or questions to <a href="mailto:jobs@inspirehep.net">jo
             stmp_email.sendmail(hepjobs_email, rcpt, msg.as_string())
             stmp_email.quit()
             print "Message sent!"
-            try_send = 0
+            try_send = False
         elif send == 'n':
             print "Message not sent."
 
