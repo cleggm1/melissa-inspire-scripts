@@ -21,7 +21,7 @@
 """ Bibcheck plugin to add 980__a type-codes to records from journals that always
     contain published, conference, or review papers
 """
-from invenio.bibcheck_task import AmendableRecord
+from invenio.bibcheck_task import AmendableRecord, add_field
 from invenio.bibedit_utils import get_bibrecord
 from invenio.search_engine import perform_request_search
 
