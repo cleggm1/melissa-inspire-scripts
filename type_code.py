@@ -88,7 +88,7 @@ REVIEW_DICT = {"Prog.Part.Nucl.Phys.":"10.1016/j.ppnp.",
                "Astron.Astrophys.Rev.":"10.1007/s00159",
                "Rev.Accel.Sci.Tech.":"10.1142/S17936268"}
 
-test_records = []
+test_records = [614,1113,1713,21231]
 filter_pattern = "773__y:1900->3000 -980__a:Proceedings -980__a:Introductory"
 results = perform_request_search(p=filter_pattern, cc="HEP")
 print len(results)
@@ -134,11 +134,14 @@ def check_record(record):
     
     for type_code, mapping in type_codes:
         if try_dict(mapping, type_code=type_code, journals=journals, dois=dois, codes=codes):
-            #print "Adding 980__a:%s to record %i" % (type_code, record)
+            #print "Adding 980__a:%s to record %s" % (type_code, recid)
             record.add_field('980__', '', subfields=[('a', type_code)])
 
 
 if __name__ == '__main__':
     for record in test_records:
         record = AmendableRecord(get_bibrecord(record))
+        record.rule  = {}
+        record.rule['name'] = 'melissa'
+        record.rule['holdingpen'] = False
         check_record(record)
