@@ -60,6 +60,7 @@ def main():
     update_counter = 0
     error_counter = 0
     skip_list = [line for line in done.readlines()]
+    """Creates a list of tuples of OSTI provided matches of OSTI IDs and DOIs, skipping OSTI IDs that have previously been uploaded"""
     for line in input.readlines():
         matchObj = re.search(r'(\d+)\t(10.*?)\s|$', line)
         if matchObj:
@@ -73,6 +74,7 @@ def main():
             html_search = re.sub(' ', '+', html_search)
             results = perform_request_search(p=search, cc='HEP')
             if len(results) > 1:
+                """records instances where INSPIRE has separate records for a matched DOI and OSTI ID"""
                 mismatch = ['<a href="https://inspirehep.net/record/%s">%s</a>' % (str(r), str(r)) for r in results]
                 error_counter += 1
                 errors.write("Mismatch: %s => %s<br />" % (html_search, ' '.join(mismatch)))
@@ -83,10 +85,13 @@ def main():
                     if update:
                         error_phrases = ("record already contains", "but not doi")
                         if "<record>" in update:
+                            """If DOI found in INSPIRE without associated OSTI ID, writes MARCXML to append ID"""
                             update_counter += 1
                             output.write(update)
+                            """Includes OSTI ID in list to be skipped the next time the script is run"""
                             done.write(paper[0]+"\n")
                         if any(x in update for x in error_phrases):
+                            """records INSPIRE records to be checked for errors/missing DOIs"""
                             error_counter += 1
                             errors.write(update)
     print "%i of %i records updated" % (update_counter, recid_counter)
