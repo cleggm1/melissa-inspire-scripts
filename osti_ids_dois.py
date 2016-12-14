@@ -1,33 +1,15 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-##
-## This file is part of Invenio.
-## Copyright (C) 2016 CERN.
-##
-## Invenio is free software; you can redistribute it and/or
-## modify it under the terms of the GNU General Public License as
-## published by the Free Software Foundation; either version 2 of the
-## License, or (at your option) any later version.
-##
-## Invenio is distributed in the hope that it will be useful, but
-## WITHOUT ANY WARRANTY; without even the implied warranty of
-## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-## General Public License for more details.
-##
-## You should have received a copy of the GNU General Public License
-## along with Invenio; if not, write to the Free Software Foundation, Inc.,
-## 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
+
 """
-bibcheck plug-in to add OSTI ID to HEP records with a corresponding DOI
+Script to add OSTI ID to HEP records with a corresponding DOI
 """
 
 import re
-from invenio.search_engine import perform_request_search, get_fieldvalues, get_record
-from invenio.bibrecord import print_rec, record_get_field_instances, \
-record_add_field
+from invenio.search_engine import perform_request_search, get_record
+from invenio.bibrecord import print_rec, record_add_field
 from invenio.bibformat_engine import BibFormatObject
-#from invenio.bibcheck_task import AmendableRecord
-#from invenio.bibedit_utils import get_bibrecord
+
 
 def create_xml(recid=None, osti_id=None, doi=None):
     osti_exists = False
