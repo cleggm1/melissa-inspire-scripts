@@ -49,58 +49,75 @@ def create_xml(recid=None, osti_id=None, doi=None):
 
 
 def main():
-    input = open('osti-ids-dois.txt', 'r')
-    output = open('tmp_osti_ids_dois_append.out', 'w')
-    errors = open('tmp_osti_ids_dois_errors.html', 'w')
-    done = open('checked-osti-ids.out', 'r+')
-    output.write("<collection>")
-    paper_list = []
+   # input = open('osti-ids-dois.txt', 'r')
+#    output = open('tmp_osti_ids_dois_append.out', 'w')
+#    errors = open('tmp_osti_ids_dois_errors.html', 'w')
+#    done = open('checked-osti-ids.out', 'r+')
+#    output.write("<collection>")
+#    paper_list = []
+    paper_dict = {}
+    skip_dict = {}
     done_list = []
+    errors_list = []
     recid_counter = 0
     update_counter = 0
     error_counter = 0
-    skip_list = [line for line in done.readlines()]
+    with open('checked-osti-ids.out', 'r') as skip:
+        for line in skip.readlines():
+            matchObj = re.search(r'(\d+)\t(10.*?)', line)
+            if matchObj:
+                skip_dict[str(matchObj.group(1))] = matchObj.group(2)
+#        skip_list = [line for line in skip.readlines()]
     """Creates a list of tuples of OSTI provided matches of OSTI IDs and DOIs, skipping OSTI IDs that have previously been uploaded"""
-    for line in input.readlines():
-        matchObj = re.search(r'(\d+)\t(10.*?)\s|$', line)
-        if matchObj:
-            if not matchObj.group(1) in skip_list:
-                paper_list.append((str(matchObj.group(1)), (matchObj.group(2))))
-    print "%s papers to search" % len(paper_list)
-    for paper in paper_list:
-        if update_counter < 1000:
-            search = "0247_a:%s or (035__a:%s 035__9:OSTI)" % (paper[1], paper[0])
-            html_search = '<a href="https://inspirehep.net/search?p=%s">%s</a>' % (search, search)
-            html_search = re.sub(' ', '+', html_search)
-            results = perform_request_search(p=search, cc='HEP')
-            if len(results) > 1:
-                """records instances where INSPIRE has separate records for a matched DOI and OSTI ID"""
-                mismatch = ['<a href="https://inspirehep.net/record/%s">%s</a>' % (str(r), str(r)) for r in results]
-                error_counter += 1
-                errors.write("Mismatch: %s => %s<br />" % (html_search, ' '.join(mismatch)))
-            if len(results) == 1:
-                for r in results:
-                    recid_counter += 1
-                    update = create_xml(recid=r, osti_id=paper[0], doi=paper[1])
-                    if update:
-                        error_phrases = ("record already contains", "but not doi")
-                        if "<record>" in update:
-                            """If DOI found in INSPIRE without associated OSTI ID, writes MARCXML to append ID"""
-                            update_counter += 1
-                            output.write(update)
-                            """Includes OSTI ID in list to be skipped the next time the script is run"""
-                            done.write(paper[0]+"\n")
-                        if any(x in update for x in error_phrases):
-                            """records INSPIRE records to be checked for errors/missing DOIs"""
-                            error_counter += 1
-                            errors.write(update)
+    with open('osti-ids-dois.txt', 'r') as input:
+        for line in input.readlines():
+            matchObj = re.search(r'(\d+)\t(10.*?)\s|$', line)
+            if matchObj:
+                if not matchObj.group(1) in skip_dict:
+#                    paper_list.append((str(matchObj.group(1)), (matchObj.group(2))))
+                    paper_dict[str(matchObj.group(1))] = matchObj.group(2)
+    print "%s papers to search" % len(paper_dict)
+    with open('tmp_osti_ids_dois_append.out', 'w') as output:
+        output.write("<collection>")
+#        for paper in paper_list:
+        for key, value in paper_dict.iteritems():
+            if update_counter < 1000:
+                search = "0247_a:%s or (035__a:%s 035__9:OSTI)" % (value, key)
+                html_search = '<a href="https://inspirehep.net/search?p=%s">%s</a>' % (search, search)
+                html_search = re.sub(' ', '+', html_search)
+                results = perform_request_search(p=search, cc='HEP')
+                if len(results) > 1:
+                    """records instances where INSPIRE has separate records for a matched DOI and OSTI ID"""
+                    mismatch = ['<a href="https://inspirehep.net/record/%s">%s</a>' % (str(r), str(r)) for r in results]
+                    error_counter += 1
+                    errors_list.append("Mismatch: %s => %s<br />" % (html_search, ' '.join(mismatch)))
+                if len(results) == 1:
+                    for r in results:
+                        recid_counter += 1
+                        update = create_xml(recid=r, osti_id=key, doi=value)
+                        if update:
+                            error_phrases = ("record already contains", "but not doi")
+                            if "<record>" in update:
+                                """If DOI found in INSPIRE without associated OSTI ID, writes MARCXML to append ID"""
+                                update_counter += 1
+                                output.write(update)
+                                """Includes OSTI ID in list to be skipped the next time the script is run"""
+                                with open('checked-osti-ids.out', 'r+') as done:
+                                    done.write("%s\t%s\n" % (key, value))
+                            if any(x in update for x in error_phrases):
+                                """records INSPIRE records to be checked for errors/missing DOIs"""
+                                error_counter += 1
+                                errors_list.append(update)
+        output.write("</collection>")
     print "%i of %i records updated" % (update_counter, recid_counter)
     print "%i errors" % error_counter
-    output.write("</collection>")
-    output.close()
-    errors.close()
-    input.close()
-    done.close()
+#    output.write("</collection>")
+#    output.close()
+    with open('tmp_osti_ids_dois_errors.html', 'w') as errors:
+        errors.write(''.join(errors_list))
+#    errors.close()
+    #input.close()
+    #done.close()
 if __name__ == '__main__':
     try:
         main()
