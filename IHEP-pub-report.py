@@ -8,7 +8,7 @@ from invenio.search_engine import perform_request_search
 from invenio.search_engine import print_record
 
 search = raw_input('Search: ')
-file = 'theory_pubs_'+date+'.doc'
+file = 'IHEP-pub-report.doc'
 x = perform_request_search(p=search, cc="HEP")
 with open(file, 'w') as output:
     for r in x:
