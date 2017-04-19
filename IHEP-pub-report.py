@@ -16,7 +16,7 @@ with open(file, 'w') as output:
       cv = re.sub(r'<br/>', '', cv)
       cv = re.sub(r'\s\s+', '', cv)
       citesearch = perform_request_search(p="refersto:recid:%i" % r, cc="HEP")
-      cv = cv + '\n' + len(citesearch) + ' citations'
+      cv = cv + '\n' + str(len(citesearch)) + ' citations'
       print cv + '\n\n'
       output.write(cv +'\n\n')
   
