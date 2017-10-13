@@ -20,18 +20,25 @@ term_dict = {'wkshp': 'workshop',
 'proc': 'proceedings',
 'sem': 'seminar'
 }
+yearvol = (u'Izv.Vuz.Fiz.', u'Prib.Tekh.Eksp.', u'Vestn.Mosk.Univ.Ser.III Fiz.Astron.', u'Vestn.Leningrad.Univ.Fiz.Khim.',
+u'Spektrum Wiss.', u'Bild.Wiss.', u'Phys.Today', u'Izv.Akad.Nauk Uzb.SSR')
+
 
 def split_ref(text=None):
     if text is None:
-        return
-    yearvol = (u'Izv.Vuz.Fiz.', u'Prib.Tekh.Eksp.')
-    nummatchobj = re.search('No\.\s?(\d+)', text)
+        return None
+    if 'TRANSL.' in text:
+        return None
+    nummatchobj = re.search('No\.\s?(\d+)', text, flags=re.IGNORECASE)
     out = []
+    uzb = 'Izv.Akad.Nauk Uzb.SSR'
     vals = extract_references_from_string(text).find_subfields('999C5s')
     years = extract_references_from_string(text).find_subfields('999C5y')
     if vals and years:
         y = re.sub('[^0-9]', '', years[0].value)
         splitvals = vals[0].value.split(',')
+        if uzb in text:
+            splitvals[0] = uzb
         if splitvals[0] in yearvol:
             out.append([('y',y),('p',splitvals[0]),('n',splitvals[1]),('v',y),('c',splitvals[2])])
         elif nummatchobj:
