@@ -1,0 +1,44 @@
+﻿<name>Hepnames HTML Detail</name>
+<description>Detailed description of hepnames listing</description>
+<div class="detailed_record_info">
+<BFE_INSPIRE_HEPNAMES_NAME css_class="font_weight_bold font_size_large" />
+<BFE_INSPIRE_HEPNAMES_NATIVE_NAME css_class="font_weight_normal" />
+
+<BFE_INSPIRE_CURRENT_INSTITUTION />
+<br /><BFE_INSPIRE_HEPNAMES_BAI_LINK />
+<a href="http://www.google.com/search?hl=en&amp;q=<BFE_FIELD tag="100__q" />">[Google]</a>
+<a href="/search?ln=en&amp;cc=HepNames&amp;ln=en&amp;cc=HepNames&amp;p=701%3A%22<BFE_FIELD tag="100__a" />%22">[Students]</a>
+<a href="<BFE_INSPIRE_HEPNAMES_ARXIV_BAI_SEARCH />">[arXiv]</a>
+<!-- http://arxiv.org/find/all/1/au:Brooks_T/0/1/0/all/0/1?per_page=100 -->
+<a href="<BFE_INSPIRE_HEPNAMES_ADS_LINK escape="8" />">[ADS]</a>
+<BFE_INSPIRE_WIKIPEDIA_LINK/>
+
+<br /><br />
+
+<BFE_INSPIRE_HEPNAMES_PHD_ADVISOR prefix="<strong>PhD Advisor: </strong>" suffix="<br />"/>
+<BFE_INSPIRE_HEPNAMES_INSTITUTION_PHD prefix="<strong>PhD Institution: </strong> " suffix="<br />"/>
+<BFE_INSPIRE_HEPNAMES_INSTITUTION_UG prefix="<strong>Undergrad: </strong> " suffix="<br />"/>
+<BFE_INSPIRE_HEPNAMES_EMAIL prefix="<strong>Email: </strong>" suffix="<br />" separator="<br />" />
+<BFE_INSPIRE_URL prefix="<strong>URL:</strong> " suffix="<br />" separator="<br /><strong>URL: </strong>" />
+<BFE_INSPIRE_HEPNAMES_GSCHOLAR prefix="<strong>Google Scholar: </strong>" suffix="<br />" />
+<BFE_INSPIRE_HEPNAMES_ARXIV_BAI prefix="<strong>arXiv Author Identifier: </strong>" suffix="<br />" />
+<BFE_INSPIRE_HEPNAMES_FIELD_INTEREST prefix="<strong>Field: </strong>" suffix="<br />" />
+<BFE_INSPIRE_EXP_LINK prefix="<strong>Experiment: </strong>" suffix="<br />"/>
+<BFE_INSPIRE_HEPNAMES_BAI prefix="<strong>Author Profile: </strong>" suffix="<br />"/>
+<BFE_INSPIRE_HEPNAMES_INSPIREID prefix="<strong>Inspire ID: </strong>" suffix="<br />"/>
+<BFE_INSPIRE_HEPNAMES_ORCID prefix="<strong>ORCID: </strong>" suffix="<br />"/>
+<BFE_FIELD tag="667a" prefix="<strong>Note: </strong>" suffix="<br />"/>
+
+<br /><strong>Institutional History:</strong>
+<table cellpadding="5">
+<tr>
+  <td>Institution</td>
+  <td>Rank</td>
+  <td>Start Date</td>
+  <td>End Date</td>
+  <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td><BFE_INSPIRE_HEPNAMES_UPDATE_BUTTON prefix="" suffix="" default="" escape=""/></td>
+</tr>
+<BFE_INSPIRE_HEPNAMES_INSTITUTION_TABLE />
+</table>
+<BFE_ADDTHIS />
+</div>
