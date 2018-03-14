@@ -25,12 +25,12 @@ def check_doi(input_dict, records_dict, eprints):
 #    if len(perform_request_search(p='eprint:%s' % eprint, cc='HEP')) > 0:
 #        return None
     if eprint in eprints:
-         return (r, eprint, doi, True)
+         return (None, eprint, doi)
     else:
         for r, d in records_dict.items():
             for ds in d.values():
                 if any(i == doi for i in ds):
-                    return (r, eprint, doi, False)
+                    return (r, eprint, doi)
                 else:
                     return None        
 
@@ -71,11 +71,11 @@ def main():
             if 'doi' and 'preprint_id' in child.attrib:
                 found_eprint = check_doi(child.attrib, records, eprints)
                 if found_eprint:
-                    if found_eprint[3] is True:
-                        mismatch_output.write('%s,%s,%s\n' % (found_eprint[0], found_eprint[1], found_eprint[2]))
-                    else:
+                    if found_eprint[0] is True:
                         counter+=1
                         output.write('%s,%s,%s\n' % (found_eprint[0], found_eprint[1], found_eprint[2]))
+                    else:                        
+                        mismatch_output.write('%s,%s,%s\n' % (found_eprint[0], found_eprint[1], found_eprint[2]))
     output.close()
     print counter
 
